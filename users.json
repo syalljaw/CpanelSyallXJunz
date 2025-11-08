@@ -1,0 +1,37 @@
+[
+  {
+    "username": "wota",
+    "password": "$2a$10$/2zb1P7iuDE8FqsKaAk4UunFpypEER1KybnovqqkBee7GuiYciB7S",
+    "created_at": "2025-10-07T12:15:38.131Z"
+  },
+  {
+    "username": "dontol",
+    "password": "$2a$10$P4ber.w.Cq1qBLw5qrBYFOZJyDhQ4OyGeepmMJPSAIExYvqOewbQm",
+    "created_at": "2025-10-07T12:28:07.724Z"
+  },
+  {
+    "username": "dontolkontol",
+    "password": "$2a$10$fHOwijNx/mB8rRRsQCiP4.12rqTPAPayh7UzGTuTkgPOdMtMRM2n6",
+    "created_at": "2025-10-07T12:28:59.168Z"
+  },
+  {
+    "username": "vinxzs",
+    "password": "$2a$10$BaRz24jId1LVnbJgryVe9eSQ4czmhUXq9N7hu2tkf7.osL9cG.w4i",
+    "created_at": "2025-10-07T13:15:49.402Z"
+  },
+  {
+    "username": "resellergaming",
+    "password": "$2a$10$AagGSd4Si/DPPG9/i/oNfO9lFu/DT7IvI/6uXsXMpP3S30JaNGR5y",
+    "created_at": "2025-10-07T15:11:43.273Z"
+  },
+  {
+    "username": "wotasi",
+    "password": "$2a$10$zJn0q61w.rk0OpG5HYKvgurFp8JUJQjg4gaBI7y082CnHwsHlYThS",
+    "created_at": "2025-10-11T00:05:19.046Z"
+  },
+  {
+    "username": "freya",
+    "password": "$2a$10$jWmExZbDQYWoy8pJ9.NaROeJ1E0vJrY2oPtPFn8akETGDkZkDWc9i",
+    "created_at": "2025-10-11T00:05:53.448Z"
+  }
+]
