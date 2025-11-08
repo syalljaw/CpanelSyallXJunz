@@ -3,5 +3,10 @@
     "username": "Junzslebew",
     "password": "$2a$10$voFCdobaWVfJTKwqEe7cE.l9IthWV9jIVq8DLvh5goSHNp.hEHfWm",
     "created_at": "2025-11-08T15:26:09.440Z"
+  },
+  {
+    "username": "rapp",
+    "password": "$2a$10$SbGsKqP2gbzBtUB5yB88oez4DbVdtMbRSFtXF8r69sZRFqxiKrA96",
+    "created_at": "2025-11-08T15:46:25.755Z"
   }
 ]
