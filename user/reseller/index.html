@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Cpanel VIP V1 - Reseller Gaming</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    :root{
+      --primary:#9f7aea;
+      --secondary:#4c3fbc;
+      --accent:#ff7edb;
+      --bg:#0a071a;
+      --card:#141127;
+      --text:#f2f2f2;
+      --muted:#a099c0;
+      --border:#2e2a55;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    /* ---------- GALAXY × NEBULA BG ---------- */
+    .nebula{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      background:
+        radial-gradient(ellipse at 20% 20%,rgba(159,122,234,.25) 0%,transparent 45%),
+        radial-gradient(ellipse at 60% 70%,rgba(255,126,219,.23) 0%,transparent 40%),
+        radial-gradient(ellipse at 90% 40%,rgba(76,63,188,.28) 0%,transparent 50%),
+        var(--bg);
+      animation:drift 20s ease-in-out infinite alternate;
+    }
+    @keyframes drift{from{transform:translate(0,0)}to{transform:translate(40px,-30px)}}
+
+    .stars{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background:transparent url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjRweCIgaGVpZ2h0PSI0cHgiIHZpZXdCb3g9IjAgMCA0IDQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDQgNCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==') repeat top center;
+      animation:move-stars 120s linear infinite;
+    }
+    @keyframes move-stars{from{background-position:0 0}to{background-position:-10000px 5000px}}
+
+    /* ---------- NAVIGATION ---------- */
+    .topbar{
+      position:fixed;
+      top:0;left:0;right:0;
+      height:64px;
+      background:rgba(20,17,39,.75);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;
+      padding:0 24px;
+      z-index:1000;
+    }
+    .brand{
+      font-size:22px;
+      font-weight:700;
+      letter-spacing:.5px;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-right:auto;
+    }
+    .nav-links{
+      display:flex;
+      gap:8px;
+    }
+    .nav-links a{
+      position:relative;
+      padding:8px 16px;
+      font-size:15px;
+      color:var(--muted);
+      text-decoration:none;
+      border-radius:8px;
+      transition:color .3s,background .3s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active{
+      color:#fff;
+      background:var(--primary);
+      box-shadow:0 0 12px var(--primary);
+    }
+
+    /* ---------- MAIN ---------- */
+    main{
+      height:100vh;
+      padding:88px 6vw 40px;
+      overflow-y:auto;
+        /* scroll kustom */
+        scrollbar-width:thin;
+        scrollbar-color:var(--primary) transparent;
+    }
+    main::-webkit-scrollbar{width:6px}
+    main::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px}
+
+    .page{display:none;animation:fadeIn .6s ease forwards}
+    .page.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:30px;
+      margin-bottom:30px;
+      box-shadow:0 8px 32px rgba(0,0,0,.35);
+    }
+    h2{font-size:26px;margin-bottom:10px}
+    .sub{color:var(--muted);font-size:14px;margin-bottom:25px}
+
+    label{display:block;margin-bottom:6px;font-size:14px}
+    input,select{
+      width:100%;padding:12px 14px;margin-bottom:18px;
+      border:1px solid var(--border);border-radius:10px;
+      background:#0f0d1f;color:var(--text);font-size:15px;
+      transition:all .2s;
+    }
+    input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 10px var(--primary)}
+
+    button{
+      width:100%;padding:12px;border:none;border-radius:10px;
+      background:var(--primary);color:#fff;font-size:16px;font-weight:600;
+      cursor:pointer;transition:all .3s ease;
+    }
+    button:hover{background:var(--secondary);transform:translateY(-2px);box-shadow:0 8px 24px rgba(159,122,234,.45)}
+
+    .stat{
+      display:flex;justify-content:space-between;
+      background:#0f0d1f;border:1px solid var(--border);
+      border-radius:10px;padding:12px 16px;margin:8px 0;
+      transition:background .3s;
+    }
+    .stat:hover{background:#1a1730}
+
+    .success-box{
+      background:#0f0d1f;border:1px solid var(--primary);
+      border-radius:10px;padding:18px;font-size:14px;margin-bottom:20px;
+    }
+    .hidden{display:none}
+
+    /* ---------- LOADING ---------- */
+    .loading-overlay{
+      position:fixed;inset:0;
+      background:rgba(10,7,26,.85);
+      backdrop-filter:blur(8px);
+      display:flex;justify-content:center;align-items:center;
+      opacity:0;visibility:hidden;transition:opacity .3s;
+      z-index:2000;
+    }
+    .loading-overlay.show{opacity:1;visibility:visible}
+    .loading-box{
+      background:var(--card);padding:30px 40px;border-radius:14px;
+      text-align:center;box-shadow:0 0 40px var(--primary);
+    }
+    .spinner{
+      width:44px;height:44px;margin:0 auto 15px;
+      border:4px solid transparent;
+      border-top-color:var(--primary);
+      border-right-color:var(--accent);
+      border-radius:50%;animation:spin .8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<div class="nebula"></div>
+<div class="stars"></div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="brand">Galaxy × Nebula Panel</div>
+  <nav class="nav-links">
+    <a href="#" data-page="dashboard" class="active">Dashboard</a>
+    <a href="#" data-page="create">Create Panel</a>
+    <a href="#" data-page="history">Riwayat</a>
+  </nav>
+</header>
+
+<!-- Main -->
+<main>
+  <!-- Dashboard -->
+  <section id="dashboard" class="page active">
+    <div class="card">
+      <h2 id="greeting">Halo, User!</h2>
+      <p class="sub" id="clock">Jam WIB: --:--:--</p>
+
+      <div class="stat"><span>Alamat IP</span><b id="ip">Memuat...</b></div>
+      <div class="stat"><span>Baterai</span><b id="baterai">Memuat...</b></div>
+      <div class="stat"><span>Paket Anda</span><b id="paket">-</b></div>
+    </div>
+  </section>
+
+  <!-- Create Panel -->
+  <section id="create" class="page">
+    <div class="card">
+      <h2>Buat Panel Baru</h2>
+      <p class="sub">Isi form berikut untuk generate akun Pterodactyl</p>
+
+      <label>Username Panel</label>
+      <input id="panelUser" placeholder="Username baru">
+
+      <label>Paket RAM</label>
+      <select id="panelPaket">
+        <option value="">-- Pilih Paket --</option>
+        <option value="1gb">1GB</option><option value="2gb">2GB</option><option value="3gb">3GB</option><option value="4gb">4GB</option><option value="5gb">5GB</option><option value="6gb">6GB</option><option value="7gb">7GB</option><option value="8gb">8GB</option><option value="9gb">9GB</option><option value="10gb">10GB</option><option value="unli">Unlimited</option>
+      </select>
+
+      <button onclick="buatPanel()">CREATE PANEL</button>
+    </div>
+
+    <!-- Hasil -->
+    <div id="step2" class="card hidden">
+      <div class="success-box">
+        <b>Email:</b> <span id="email">-</span><br>
+        <b>Username:</b> <span id="uname">-</span><br>
+        <b>Password:</b> <span id="pass">-</span><br>
+        <b>Link:</b> <a href="https://domainpanel.resellergaming.my.id" target="_blank" style="color:var(--primary)">Buka Panel</a><br>
+        <b>Paket:</b> <span id="ram">-</span>
+      </div>
+      <button onclick="resetForm()">Kembali</button>
+      <button onclick="logout()" style="margin-top:10px;">Logout</button>
+    </div>
+
+    <!-- 5 Panel Terakhir -->
+    <div class="card" style="margin-top:20px">
+      <h3 style="font-size:18px;margin-bottom:10px">5 Panel Terakhir</h3>
+      <table id="recentTable" style="width:100%;font-size:13px;border-collapse:collapse">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border)">
+            <th style="padding:6px">User</th>
+            <th style="padding:6px">Paket</th>
+            <th style="padding:6px">Waktu</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Riwayat Lengkap -->
+  <section id="history" class="page">
+    <div class="card">
+      <h2>Riwayat Create Panel</h2>
+      <p class="sub">Daftar panel yang pernah Anda buat di perangkat ini.</p>
+
+      <table id="historyTable" style="width:100%;font-size:14px;border-collapse:collapse;margin-top:12px">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border)">
+            <th style="padding:8px 6px;text-align:left">#</th>
+            <th style="padding:8px 6px;text-align:left">Username</th>
+            <th style="padding:8px 6px;text-align:left">Paket</th>
+            <th style="padding:8px 6px;text-align:left">Email</th>
+            <th style="padding:8px 6px;text-align:left">Password</th>
+            <th style="padding:8px 6px;text-align:left">Waktu</th>
+            <th style="padding:8px 6px;text-align:left">Link</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <button onclick="clearHistory()" style="margin-top:16px;background:#e94560">Hapus Riwayat</button>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      Sedang membuat panel...
+    </div>
+  </div>
+</main>
+
+<script>
+/* ========== SETTING  ========== */
+const DOMAIN = "https://junznih.xpanelprivate.my.id"; // ganti dengan domain Anda
+const PLTA   = "ptla_IZY0mtJXx8YGiyVD8zzIiyhPU3ERtBfBAacDXqFU8aL"; // ganti dengan plta Anda
+
+
+/* ---------- NAV ---------- */
+document.querySelectorAll('.nav-links a').forEach(link=>{
+  link.addEventListener('click',e=>{
+    e.preventDefault();
+    const page = link.dataset.page;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+/* ---------- JAM WIB ---------- */
+function updateClock(){
+  const wib = new Date().toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta'});
+  document.getElementById('clock').innerText = `Jam WIB: ${wib}`;
+}
+updateClock(); setInterval(updateClock,1000);
+
+/* ---------- IP & BATERAI ---------- */
+fetch('https://api.ipify.org?format=json')
+  .then(r=>r.json())
+  .then(d=>document.getElementById('ip').innerText=d.ip)
+  .catch(()=>document.getElementById('ip').innerText='Gagal memuat');
+
+if('getBattery' in navigator){
+  navigator.getBattery().then(bat=>{
+    function upd(){
+      const pr = Math.round(bat.level*100);
+      const ch = bat.charging ? '🔌 Mengisi' : '⚡ Tidak';
+      document.getElementById('baterai').innerText = `${pr}% (${ch})`;
+    }
+    upd();
+    bat.addEventListener('levelchange',upd);
+    bat.addEventListener('chargingchange',upd);
+  });
+} else document.getElementById('baterai').innerText = 'Tidak didukung';
+
+/* ---------- BUAT PANEL ---------- */
+const hargaPaket = {
+  "1gb":{ram:1000,disk:1000,cpu:40},"2gb":{ram:2000,disk:1000,cpu:60},"3gb":{ram:3000,disk:2000,cpu:80},
+  "4gb":{ram:4000,disk:2000,cpu:100},"5gb":{ram:5000,disk:3000,cpu:120},"6gb":{ram:6000,disk:3000,cpu:140},
+  "7gb":{ram:7000,disk:4000,cpu:160},"8gb":{ram:8000,disk:4000,cpu:180},"9gb":{ram:9000,disk:5000,cpu:200},
+  "10gb":{ram:10000,disk:5000,cpu:220},"unli":{ram:0,disk:0,cpu:0}
+};
+async function buatPanel(){
+  const user = document.getElementById('panelUser').value.trim();
+  const paket = document.getElementById('panelPaket').value;
+  const load = document.getElementById('loadingOverlay');
+  if(!user||!paket) return alert('Username dan paket wajib diisi!');
+  load.classList.add('show');
+  const cfg = hargaPaket[paket];
+  try{
+    const res = await fetch(
+      `https://api.resellergaming.my.id/pterodactyl/addpanel?domain=${encodeURIComponent(DOMAIN)}&plta=${PLTA}&username=${user}&disk=${cfg.disk}&cpu=${cfg.cpu}&ram=${cfg.ram}`
+    );
+    const data = await res.json();
+    if(data?.user?.attributes){
+      const u = data.user.attributes;
+      document.getElementById('step2').classList.remove('hidden');
+      document.getElementById('email').innerText=u.email;
+      document.getElementById('uname').innerText=u.username;
+      document.getElementById('pass').innerText=u.password||u.username;
+      document.getElementById('ram').innerText=paket.toUpperCase();
+      // SIMPAN KE RIWAYAT
+      saveHistory({
+        user:  u.username,
+        paket: paket.toUpperCase(),
+        email: u.email,
+        pass:  u.password||u.username,
+        time:  new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta'})
+      });
+      alert('✅ Panel berhasil dibuat!');
+    } else alert(`❌ Gagal: ${data?.error||'Unknown error'}`);
+  } catch(e){
+    alert('⚠️ Terjadi kesalahan: '+e.message);
+  } finally{
+    load.classList.remove('show');
+  }
+}
+function resetForm(){
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('panelUser').value='';
+  document.getElementById('panelPaket').value='';
+}
+function logout(){
+  window.location.href='https://google.com';
+}
+
+/* ---------- RIWAYAT ---------- */
+function saveHistory(entry){
+  let list = JSON.parse(localStorage.getItem('panelHistory')||'[]');
+  list.unshift(entry);
+  localStorage.setItem('panelHistory',JSON.stringify(list));
+  renderHistory();
+  renderRecent();
+}
+function renderHistory(){
+  const tbody = document.querySelector('#historyTable tbody');
+  const list  = JSON.parse(localStorage.getItem('panelHistory')||'[]');
+  if(!list.length){ tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted)">Belum ada riwayat.</td></tr>'; return;}
+  tbody.innerHTML = list.map((h,i)=>`
+    <tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 6px">${i+1}</td>
+      <td style="padding:8px 6px">${h.user}</td>
+      <td style="padding:8px 6px">${h.paket}</td>
+      <td style="padding:8px 6px">${h.email}</td>
+      <td style="padding:8px 6px">${h.pass}</td>
+      <td style="padding:8px 6px">${h.time}</td>
+      <td style="padding:8px 6px"><a href="https://domainpanel.resellergaming.my.id" target="_blank" style="color:var(--primary)">Buka</a></td>
+    </tr>`).join('');
+}
+function renderRecent(){
+  const tbody = document.querySelector('#recentTable tbody');
+  const list  = JSON.parse(localStorage.getItem('panelHistory')||'[]').slice(0,5);
+  tbody.innerHTML = list.map(h=>`
+    <tr>
+      <td style="padding:6px">${h.user}</td>
+      <td style="padding:6px">${h.paket}</td>
+      <td style="padding:6px">${h.time}</td>
+    </tr>`).join('');
+}
+function clearHistory(){
+  if(confirm('Hapus semua riwayat?')){ localStorage.removeItem('panelHistory'); renderHistory(); renderRecent(); }
+}
+
+/* panggil sekali saat load */
+renderHistory();
+renderRecent();
+</script>
+</body>
+</html>
