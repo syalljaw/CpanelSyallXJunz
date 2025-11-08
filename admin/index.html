@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin &ndash; Panel Reseller</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+  /*========  DESIGN SYSTEM  ========*/
+  :root{
+    --c1:#0d0c22;
+    --c2:#1e1d38;
+    --c3:#6c5dd3;
+    --c4:#a593ff;
+    --glow:0 0 20px -5px var(--c4);
+    --radius:14px;
+    --speed:.35s;
+  }
+
+  /*========  GLOBAL  ========*/
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
+  body{
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--c1);
+    overflow:hidden;
+    color:#f2f2f7;
+  }
+
+  /*========  ANIMATED BACKDROP  ========*/
+  .bg-anim{
+    position:absolute;
+    inset:-200px;
+    background:conic-gradient(from 180deg at 50% 50%,var(--c3),var(--c4),var(--c3));
+    animation:spin 6s linear infinite;
+    filter:blur(80px);
+    z-index:0;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /*========  CARD  ========*/
+  .card{
+    position:relative;
+    z-index:1;
+    width:360px;
+    padding:40px 30px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:var(--radius);
+    backdrop-filter:blur(16px);
+    box-shadow:var(--glow);
+    text-align:center;
+  }
+  h2{margin-bottom:24px;font-weight:600;font-size:22px;letter-spacing:.5px;}
+
+  /*========  INPUT  ========*/
+  input{
+    width:100%;
+    padding:14px 16px;
+    margin-bottom:16px;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:8px;
+    background:rgba(0,0,0,.15);
+    color:#fff;
+    font-size:15px;
+    transition:transform var(--speed),box-shadow var(--speed);
+  }
+  input::placeholder{color:rgba(255,255,255,.55);}
+  input:focus{
+    outline:none;
+    transform:scale(1.02);
+    box-shadow:0 0 0 3px var(--c4);
+  }
+
+  /*========  BUTTON  ========*/
+  button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:var(--c3);
+    color:#fff;
+    font-weight:600;
+    font-size:16px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:background var(--speed);
+  }
+  button:hover{background:var(--c4);}
+  /* Ripple */
+  button span.ripple{
+    position:absolute;
+    border-radius:50%;
+    transform:scale(0);
+    animation:ripple .6s linear;
+    background:rgba(255,255,255,.45);
+  }
+  @keyframes ripple{to{transform:scale(4);opacity:0;}}
+
+  /*========  HELPER  ========*/
+  .loading,.error{margin-top:12px;font-size:14px;}
+  .loading{color:rgba(255,255,255,.7);}
+  .error{color:#ff6b6b;}
+  </style>
+</head>
+
+<body>
+  <!-- Background bergerak -->
+  <div class="bg-anim"></div>
+
+  <!-- Card Login -->
+  <div class="card">
+    <h2>Login Admin</h2>
+    <input id="adminkey" type="password" placeholder="Masukkan ADMIN_KEY" autocomplete="off">
+    <button id="btnLogin">Masuk</button>
+
+    <div class="loading" id="loading" style="display:none;">🔄 Memeriksa...</div>
+    <div class="error" id="error"></div>
+  </div>
+
+  <script>
+  /* Ripple effect on click (CSS-only) */
+  document.getElementById('btnLogin').addEventListener('click',function(e){
+    const btn=e.currentTarget;
+    const circle=document.createElement('span');
+    const diameter=Math.max(btn.clientWidth,btn.clientHeight);
+    const radius=diameter/2;
+    circle.style.width=circle.style.height=diameter+'px';
+    circle.style.left=(e.clientX-btn.offsetLeft-radius)+'px';
+    circle.style.top=(e.clientY-btn.offsetTop-radius)+'px';
+    circle.classList.add('ripple');
+    btn.appendChild(circle);
+    setTimeout(()=>circle.remove(),600);
+    loginAdmin();
+  });
+
+  /* Core login function */
+  async function loginAdmin(){
+    const key=document.getElementById('adminkey').value.trim();
+    const loading=document.getElementById('loading');
+    const errorBox=document.getElementById('error');
+    loading.style.display='block';
+    errorBox.textContent='';
+
+    try{
+      const res=await fetch('/api/adminLogin',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({key})
+      });
+      const data=await res.json();
+      loading.style.display='none';
+
+      if(res.ok && data.success){
+        localStorage.setItem('admin_token',key);
+        window.location.href='/admin/dashboard/';
+      }else{
+        errorBox.textContent=data.message||'Login gagal!';
+      }
+    }catch(err){
+      loading.style.display='none';
+      errorBox.textContent='Terjadi kesalahan: '+err.message;
+    }
+  }
+
+  /* Enter key support */
+  document.getElementById('adminkey').addEventListener('keyup',e=>{
+    if(e.key==='Enter') document.getElementById('btnLogin').click();
+  });
+  </script>
+</body>
+</html>
